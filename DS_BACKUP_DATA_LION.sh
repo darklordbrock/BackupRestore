@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # OS X Lion Beta version. Needs testing. Please report bugs.
-# Code that is not used for Lion is removed. Use old scripts for 10.6
 # rustymyers@gmail.com
 
 # Script to backup home folders on volume before restoring disk image with DeployStudio
@@ -51,9 +50,10 @@ EOF
 #Variables:
 # Ignore these accounts or folders in /Users (use lowercase):
 # Shared folder is excluded using "shared"
-export EXCLUDE=( "shared" "guest" "deleted users" "spider" )
+export EXCLUDE=( "shared" "guest" "deleted users" )
 # Unique ID for plist and common variable for scripts
-export UNIQUE_ID=`echo "$DS_PRIMARY_MAC_ADDRESS"|tr -d ':'` # Add Times? UNIQUE_ID=`date "+%Y%m%d%S"`
+export UNIQUE_ID=`echo "$DS_PRIMARY_MAC_ADDRESS"|tr -d ':'` 
+# Add Times? UNIQUE_ID=`date "+%Y%m%d%S"`
 # Should we remove users cache folder? 1 = yes, 0 = no. Set to 0 by default.
 export RMCache="1"
 # DS Script to backup user data with tar to Backups folder on repository.
@@ -64,8 +64,10 @@ export DS_INTERNAL_DRIVE=`system_profiler SPSerialATADataType|awk -F': ' '/Mount
 export DS_USER_PATH="/Users"
 # Default backup tool
 export BACKUP_TOOL="tar"
-# Filevault backup ## What the fuck is this for? ## It's the filename of the backup of the Filevault keys (FilevaultKeys.tar). Not currently implemented
-export FilevaultKeys="FilevaultKeys"
+# Filevault backup 
+## What the fuck is this for? 
+## It's the filename of the backup of the Filevault keys (FilevaultKeys.tar). Not currently implemented
+#export FilevaultKeys="FilevaultKeys"
 
 # Parse command line arguments
 while getopts :e:q:cv:u:d:t:h opt; do
@@ -200,14 +202,14 @@ do
 				RUNTIME_ABORT "RuntimeAbortWorkflow: Error: Could not back up user account" "\t+Sucess: User account successfully backed up"
 			fi
 			# User data backup plist
-			DS_USER_BACKUP_PLIST="$DS_REPOSITORY_BACKUPS/$USERZ-USER.plist"
+			#DS_USER_BACKUP_PLIST="$DS_REPOSITORY_BACKUPS/$USERZ-USER.plist"
 			# Check if user is an admin
-			if [[ -z `"$dscl" -plist -f "$INTERNAL_DN" localonly -read "/Local/Target/Groups/admin" "GroupMembership"|grep -w "$USERZ"` ]]; then
-				/usr/libexec/PlistBuddy -c "add :isAdmin string no" "$DS_USER_BACKUP_PLIST"
-			else
-				/usr/libexec/PlistBuddy -c "add :isAdmin string yes" "$DS_USER_BACKUP_PLIST"
-				echo -e "\t+Sucess: $USERZ is an admin"
-			fi
+			#if [[ -z `"$dscl" -plist -f "$INTERNAL_DN" localonly -read "/Local/Target/Groups/admin" "GroupMembership"|grep -w "$USERZ"` ]]; then
+				#/usr/libexec/PlistBuddy -c "add :isAdmin string no" "$DS_USER_BACKUP_PLIST"
+				#else
+				#/usr/libexec/PlistBuddy -c "add :isAdmin string yes" "$DS_USER_BACKUP_PLIST"
+				#echo -e "\t+Sucess: $USERZ is an admin"
+				#fi
 
 		else
 			echo -e "\t+Sucess: $USERZ is a Mobile account"
@@ -215,12 +217,12 @@ do
 			# User data backup plist
 			DS_USER_BACKUP_PLIST="$DS_REPOSITORY_BACKUPS/$USERZ-NETUSER.plist"
 			# Check if user is an admin
-			if [[ -z `"$dscl" -plist -f "$INTERNAL_DN" localonly -read "/Local/Target/Groups/admin" "GroupMembership"|grep -w "$USERZ"` ]]; then
-				/usr/libexec/PlistBuddy -c "add :isAdmin string no" "$DS_USER_BACKUP_PLIST" 2>/dev/null
-			else
-				/usr/libexec/PlistBuddy -c "add :isAdmin string yes" "$DS_USER_BACKUP_PLIST" 2>/dev/null
-				echo -e "\t+Sucess: $USERZ is an admin"
-			fi
+			#if [[ -z `"$dscl" -plist -f "$INTERNAL_DN" localonly -read "/Local/Target/Groups/admin" "GroupMembership"|grep -w "$USERZ"` ]]; then
+			#	/usr/libexec/PlistBuddy -c "add :isAdmin string no" "$DS_USER_BACKUP_PLIST" 2>/dev/null
+			#else
+			#	/usr/libexec/PlistBuddy -c "add :isAdmin string yes" "$DS_USER_BACKUP_PLIST" 2>/dev/null
+			#	echo -e "\t+Sucess: $USERZ is an admin"
+			#fi
 		fi
 	else 
 		echo -e "<>Excluding $USERZ" 

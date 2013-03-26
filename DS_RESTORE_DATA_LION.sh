@@ -134,10 +134,10 @@ for i in "$DS_REPOSITORY_BACKUPS/"*USER.plist; do
 		# Network accounts don't have their passwords backed up, skipping.
 		echo -e "\t -password skipped"
 		# Check if user is Admin, Restore admin rights
-		if [[ `"$DS_INTERNAL_DRIVE/usr/libexec/PlistBuddy" -c "print :isAdmin" "DS_BACKUP_PLIST"` = "yes" ]]; then
-			"$dscl" -f "$INTERNAL_DN" localonly -merge "/Local/Target/Groups/admin" "GroupMembership" "$USERZ"
-			RUNTIME_ABORT "\t -admin rights failed restore" "\t +admin rights restored"
-		fi
+		#if [[ `"$DS_INTERNAL_DRIVE/usr/libexec/PlistBuddy" -c "print :isAdmin" "DS_BACKUP_PLIST"` = "yes" ]]; then
+		#	"$dscl" -f "$INTERNAL_DN" localonly -merge "/Local/Target/Groups/admin" "GroupMembership" "$USERZ"
+		#	RUNTIME_ABORT "\t -admin rights failed restore" "\t +admin rights restored"
+		#fi
 	else
 		echo -e "\t >Local User:"
 		# Perhaps All I need to do is backup the dslocal users plist?
@@ -149,11 +149,11 @@ for i in "$DS_REPOSITORY_BACKUPS/"*USER.plist; do
 		DS_BACKUP_PLIST="$DS_REPOSITORY_BACKUPS/$USERZ-USER.plist"
 		# Add user to admin
 		# Check if user is Admin
-		if [[ `"$DS_INTERNAL_DRIVE/usr/libexec/PlistBuddy" -c "print :isAdmin" "$DS_BACKUP_PLIST"` = "yes" ]]; then
-			"$dscl" -f "$INTERNAL_DN" localonly -merge "/Local/Target/Groups/admin" "GroupMembers" "$GenUID"
-			"$dscl" -f "$INTERNAL_DN" localonly -merge "/Local/Target/Groups/admin" "GroupMembership" "$USERZ"
-			RUNTIME_ABORT "\t -admin rights failed to restore" "\t +admin rights restored"
-		fi
+		#if [[ `"$DS_INTERNAL_DRIVE/usr/libexec/PlistBuddy" -c "print :isAdmin" "$DS_BACKUP_PLIST"` = "yes" ]]; then
+		#	"$dscl" -f "$INTERNAL_DN" localonly -merge "/Local/Target/Groups/admin" "GroupMembers" "$GenUID"
+		#	"$dscl" -f "$INTERNAL_DN" localonly -merge "/Local/Target/Groups/admin" "GroupMembership" "$USERZ"
+		#	RUNTIME_ABORT "\t -admin rights failed to restore" "\t +admin rights restored"
+		#fi
 	fi
 done
 
