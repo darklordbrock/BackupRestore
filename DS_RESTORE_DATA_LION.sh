@@ -170,13 +170,13 @@ case $RESTORE_TOOL in
 			RUNTIME_ABORT "RuntimeAbortWorkflow: Could not restore home folder for $USERZ using tar...exiting." "\t +home restored successfully"
 		done
 		;;
-	ditto )
-		for i in "$DS_REPOSITORY_BACKUPS"/*cpio.gz; do
-			USERZ=`echo $(basename $i)|awk -F'.' '{print $1}'`
-			echo " >>Restore From: $i Restore To: $DS_LAST_RESTORED_VOLUME$DS_USER_PATH/"
-			/usr/bin/ditto -x "$i" "$DS_LAST_RESTORED_VOLUME$DS_USER_PATH/"
-			RUNTIME_ABORT "RuntimeAbortWorkflow: Could not restore home folder for $USERZ using ditto...exiting." "\t +home restored successfully"
-		done
+	#ditto )
+	#	for i in "$DS_REPOSITORY_BACKUPS"/*cpio.gz; do
+	#		USERZ=`echo $(basename $i)|awk -F'.' '{print $1}'`
+	#		echo " >>Restore From: $i Restore To: $DS_LAST_RESTORED_VOLUME$DS_USER_PATH/"
+	#		/usr/bin/ditto -x "$i" "$DS_LAST_RESTORED_VOLUME$DS_USER_PATH/"
+	#		RUNTIME_ABORT "RuntimeAbortWorkflow: Could not restore home folder for $USERZ using ditto...exiting." "\t +home restored successfully"
+	#	done
 # 		;;
 # 	rsync )
 # 		for i in "$DS_REPOSITORY_BACKUPS"/*rsync; do
