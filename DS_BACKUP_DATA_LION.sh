@@ -50,7 +50,7 @@ EOF
 #Variables:
 # Ignore these accounts or folders in /Users (use lowercase):
 # Shared folder is excluded using "shared"
-export EXCLUDE=( "shared" "guest" "deleted users" )
+export EXCLUDE=( "shared" "guest" "deleted users" "ladmin" )
 # Unique ID for plist and common variable for scripts
 export UNIQUE_ID=`echo "$DS_PRIMARY_MAC_ADDRESS"|tr -d ':'` 
 # Add Times? UNIQUE_ID=`date "+%Y%m%d%S"`
