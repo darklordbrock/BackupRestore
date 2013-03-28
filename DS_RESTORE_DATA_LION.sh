@@ -121,16 +121,16 @@ then
 fi
 
 # Scan computer's folder for users to restore
-for i in "$DS_REPOSITORY_BACKUPS/"*USER.plist; do
+#for i in "$DS_REPOSITORY_BACKUPS/"*USER.plist; do
 	# Restore User Account
-	USERZ=`echo $(basename $i)|awk -F'-' '{print $1}'`
+#	USERZ=`echo $(basename $i)|awk -F'-' '{print $1}'`
 
-	echo -e "<>Restoring $USERZ"
+#	echo -e "<>Restoring $USERZ"
 	
-	if [[ "$i" =~ "NETUSER" ]]; then
+#	if [[ "$i" =~ "NETUSER" ]]; then
 		# Backup plist variable
-		DS_BACKUP_PLIST="$DS_REPOSITORY_BACKUPS/$USERZ-NETUSER.plist"
-		echo -e "\t >Network User:"
+#		DS_BACKUP_PLIST="$DS_REPOSITORY_BACKUPS/$USERZ-NETUSER.plist"
+#		echo -e "\t >Network User:"
 		# Network accounts don't have their passwords backed up, skipping.
 		#echo -e "\t -password skipped"
 		# Check if user is Admin, Restore admin rights
@@ -138,15 +138,15 @@ for i in "$DS_REPOSITORY_BACKUPS/"*USER.plist; do
 		#	"$dscl" -f "$INTERNAL_DN" localonly -merge "/Local/Target/Groups/admin" "GroupMembership" "$USERZ"
 		#	RUNTIME_ABORT "\t -admin rights failed restore" "\t +admin rights restored"
 		#fi
-	else
-		echo -e "\t >Local User:"
+#	else
+#		echo -e "\t >Local User:"
 		# Perhaps All I need to do is backup the dslocal users plist?
-		if [[ -e "${DS_REPOSITORY_BACKUPS}/$USERZ.plist" ]]; then
-			cp -p "${DS_REPOSITORY_BACKUPS}/$USERZ.plist" "${DS_INTERNAL_DRIVE}/var/db/dslocal/nodes/Default/users/$USERZ.plist"
-			RUNTIME_ABORT "RuntimeAbortWorkflow: Could not create $USERZ...exiting." "\t +account created successfully"
-		fi
+#		if [[ -e "${DS_REPOSITORY_BACKUPS}/$USERZ.plist" ]]; then
+#			cp -p "${DS_REPOSITORY_BACKUPS}/$USERZ.plist" "${DS_INTERNAL_DRIVE}/var/db/dslocal/nodes/Default/users/$USERZ.plist"
+#			RUNTIME_ABORT "RuntimeAbortWorkflow: Could not create $USERZ...exiting." "\t +account created successfully"
+#		fi
 		# Backup plist variable
-		DS_BACKUP_PLIST="$DS_REPOSITORY_BACKUPS/$USERZ-USER.plist"
+#		DS_BACKUP_PLIST="$DS_REPOSITORY_BACKUPS/$USERZ-USER.plist"
 		# Add user to admin
 		# Check if user is Admin
 		#if [[ `"$DS_INTERNAL_DRIVE/usr/libexec/PlistBuddy" -c "print :isAdmin" "$DS_BACKUP_PLIST"` = "yes" ]]; then
@@ -154,8 +154,8 @@ for i in "$DS_REPOSITORY_BACKUPS/"*USER.plist; do
 		#	"$dscl" -f "$INTERNAL_DN" localonly -merge "/Local/Target/Groups/admin" "GroupMembership" "$USERZ"
 		#	RUNTIME_ABORT "\t -admin rights failed to restore" "\t +admin rights restored"
 		#fi
-	fi
-done
+#	fi
+#done
 
 # Restore user data from Backups folder on repository.
 # Get backup tool
