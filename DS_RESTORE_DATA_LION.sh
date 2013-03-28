@@ -41,7 +41,7 @@ EOF
 export DS_INTERNAL_DRIVE=`system_profiler SPSerialATADataType | awk -F': ' '/Mount Point/ { print $2}'|head -n1`
 
 # Set Path to last restored volume
-export DS_LAST_RESTORED_VOLUME="/Volumes/$DS_LAST_RESTORED_VOLUME"
+# export DS_LAST_RESTORED_VOLUME="/Volumes/$DS_LAST_RESTORED_VOLUME"
 # Default is set to the Last Restored Volume variable from DS
 # If you want to restore the user without restoring an image,
 # set the destination to the volume you wish to target
@@ -89,14 +89,14 @@ export INTERNAL_DN="$DS_LAST_RESTORED_VOLUME/var/db/dslocal/nodes/Default"
 
 # Uncomment this section when you want to see the variables in the log. Great for troubleshooting. 
 echo -e "# Restore Arguments"
-echo -e "# Last Restored Volume:			$DS_LAST_RESTORED_VOLUME"
+echo -e "# Last Restored Volume:		$DS_LAST_RESTORED_VOLUME"
 echo -e "# Unique ID:					$UNIQUE_ID"
 echo -e "# User Path on target:			$DS_USER_PATH"
 echo -e "# Restore Repository: 			$DS_REPOSITORY_PATH"
 echo -e "# Internal Drive:				$DS_INTERNAL_DRIVE"
-echo -e "# Backup Count:			$DS_BACKUP_COUNT"
+echo -e "# Backup Count:				$DS_BACKUP_COUNT"
 echo -e "# dscl path:					$dscl"
-echo -e "# Internal Directory:				$INTERNAL_DN"
+echo -e "# Internal Directory:			$INTERNAL_DN"
 
 function RUNTIME_ABORT {
 # Usage:
@@ -121,41 +121,41 @@ then
 fi
 
 # Scan computer's folder for users to restore
-for i in "$DS_REPOSITORY_BACKUPS/"*USER.plist; do
+#for i in "$DS_REPOSITORY_BACKUPS/"*USER.plist; do
 	# Restore User Account
-	USERZ=`echo $(basename $i)|awk -F'-' '{print $1}'`
+#	USERZ=`echo $(basename $i)|awk -F'-' '{print $1}'`
 
-	echo -e "<>Restoring $USERZ"
+#	echo -e "<>Restoring $USERZ"
 	
-	if [[ "$i" =~ "NETUSER" ]]; then
+#	if [[ "$i" =~ "NETUSER" ]]; then
 		# Backup plist variable
-		DS_BACKUP_PLIST="$DS_REPOSITORY_BACKUPS/$USERZ-NETUSER.plist"
-		echo -e "\t >Network User:"
+#		DS_BACKUP_PLIST="$DS_REPOSITORY_BACKUPS/$USERZ-NETUSER.plist"
+#		echo -e "\t >Network User:"
 		# Network accounts don't have their passwords backed up, skipping.
-		echo -e "\t -password skipped"
+		#echo -e "\t -password skipped"
 		# Check if user is Admin, Restore admin rights
-		if [[ `"$DS_INTERNAL_DRIVE/usr/libexec/PlistBuddy" -c "print :isAdmin" "DS_BACKUP_PLIST"` = "yes" ]]; then
-			"$dscl" -f "$INTERNAL_DN" localonly -merge "/Local/Target/Groups/admin" "GroupMembership" "$USERZ"
-			RUNTIME_ABORT "\t -admin rights failed restore" "\t +admin rights restored"
-		fi
-	else
-		echo -e "\t >Local User:"
+		#if [[ `"$DS_INTERNAL_DRIVE/usr/libexec/PlistBuddy" -c "print :isAdmin" "DS_BACKUP_PLIST"` = "yes" ]]; then
+		#	"$dscl" -f "$INTERNAL_DN" localonly -merge "/Local/Target/Groups/admin" "GroupMembership" "$USERZ"
+		#	RUNTIME_ABORT "\t -admin rights failed restore" "\t +admin rights restored"
+		#fi
+#	else
+#		echo -e "\t >Local User:"
 		# Perhaps All I need to do is backup the dslocal users plist?
-		if [[ -e "${DS_REPOSITORY_BACKUPS}/$USERZ.plist" ]]; then
-			cp -p "${DS_REPOSITORY_BACKUPS}/$USERZ.plist" "${DS_INTERNAL_DRIVE}/var/db/dslocal/nodes/Default/users/$USERZ.plist"
-			RUNTIME_ABORT "RuntimeAbortWorkflow: Could not create $USERZ...exiting." "\t +account created successfully"
-		fi
+#		if [[ -e "${DS_REPOSITORY_BACKUPS}/$USERZ.plist" ]]; then
+#			cp -p "${DS_REPOSITORY_BACKUPS}/$USERZ.plist" "${DS_INTERNAL_DRIVE}/var/db/dslocal/nodes/Default/users/$USERZ.plist"
+#			RUNTIME_ABORT "RuntimeAbortWorkflow: Could not create $USERZ...exiting." "\t +account created successfully"
+#		fi
 		# Backup plist variable
-		DS_BACKUP_PLIST="$DS_REPOSITORY_BACKUPS/$USERZ-USER.plist"
+#		DS_BACKUP_PLIST="$DS_REPOSITORY_BACKUPS/$USERZ-USER.plist"
 		# Add user to admin
 		# Check if user is Admin
-		if [[ `"$DS_INTERNAL_DRIVE/usr/libexec/PlistBuddy" -c "print :isAdmin" "$DS_BACKUP_PLIST"` = "yes" ]]; then
-			"$dscl" -f "$INTERNAL_DN" localonly -merge "/Local/Target/Groups/admin" "GroupMembers" "$GenUID"
-			"$dscl" -f "$INTERNAL_DN" localonly -merge "/Local/Target/Groups/admin" "GroupMembership" "$USERZ"
-			RUNTIME_ABORT "\t -admin rights failed to restore" "\t +admin rights restored"
-		fi
-	fi
-done
+		#if [[ `"$DS_INTERNAL_DRIVE/usr/libexec/PlistBuddy" -c "print :isAdmin" "$DS_BACKUP_PLIST"` = "yes" ]]; then
+		#	"$dscl" -f "$INTERNAL_DN" localonly -merge "/Local/Target/Groups/admin" "GroupMembers" "$GenUID"
+		#	"$dscl" -f "$INTERNAL_DN" localonly -merge "/Local/Target/Groups/admin" "GroupMembership" "$USERZ"
+		#	RUNTIME_ABORT "\t -admin rights failed to restore" "\t +admin rights restored"
+		#fi
+#	fi
+#done
 
 # Restore user data from Backups folder on repository.
 # Get backup tool
@@ -165,18 +165,18 @@ case $RESTORE_TOOL in
 	tar )
 		for i in "$DS_REPOSITORY_BACKUPS"/*HOME.tar; do
 			USERZ=`echo $(basename $i)|awk -F'_' '{print $1}'`
-			echo " >>Restore From: $i Restore To: $DS_LAST_RESTORED_VOLUME$DS_USER_PATH/"
-			/usr/bin/tar -xf "$i" -C "$DS_LAST_RESTORED_VOLUME$DS_USER_PATH/" --strip-components=3 --keep-newer-files
+			echo " >>Restore From: $i Restore To: ~/Users/Shared"
+			/usr/bin/tar -xf "$i" -C "~/Users/Shared" --strip-components=3 --keep-newer-files
 			RUNTIME_ABORT "RuntimeAbortWorkflow: Could not restore home folder for $USERZ using tar...exiting." "\t +home restored successfully"
 		done
 		;;
-	ditto )
-		for i in "$DS_REPOSITORY_BACKUPS"/*cpio.gz; do
-			USERZ=`echo $(basename $i)|awk -F'.' '{print $1}'`
-			echo " >>Restore From: $i Restore To: $DS_LAST_RESTORED_VOLUME$DS_USER_PATH/"
-			/usr/bin/ditto -x "$i" "$DS_LAST_RESTORED_VOLUME$DS_USER_PATH/"
-			RUNTIME_ABORT "RuntimeAbortWorkflow: Could not restore home folder for $USERZ using ditto...exiting." "\t +home restored successfully"
-		done
+	#ditto )
+	#	for i in "$DS_REPOSITORY_BACKUPS"/*cpio.gz; do
+	#		USERZ=`echo $(basename $i)|awk -F'.' '{print $1}'`
+	#		echo " >>Restore From: $i Restore To: $DS_LAST_RESTORED_VOLUME$DS_USER_PATH/"
+	#		/usr/bin/ditto -x "$i" "$DS_LAST_RESTORED_VOLUME$DS_USER_PATH/"
+	#		RUNTIME_ABORT "RuntimeAbortWorkflow: Could not restore home folder for $USERZ using ditto...exiting." "\t +home restored successfully"
+	#	done
 # 		;;
 # 	rsync )
 # 		for i in "$DS_REPOSITORY_BACKUPS"/*rsync; do
