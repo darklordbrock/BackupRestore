@@ -41,7 +41,7 @@ EOF
 export DS_INTERNAL_DRIVE=`system_profiler SPSerialATADataType | awk -F': ' '/Mount Point/ { print $2}'|head -n1`
 
 # Set Path to last restored volume
-export DS_LAST_RESTORED_VOLUME="/Volumes/$DS_LAST_RESTORED_VOLUME"
+# export DS_LAST_RESTORED_VOLUME="/Volumes/$DS_LAST_RESTORED_VOLUME"
 # Default is set to the Last Restored Volume variable from DS
 # If you want to restore the user without restoring an image,
 # set the destination to the volume you wish to target
@@ -89,14 +89,14 @@ export INTERNAL_DN="$DS_LAST_RESTORED_VOLUME/var/db/dslocal/nodes/Default"
 
 # Uncomment this section when you want to see the variables in the log. Great for troubleshooting. 
 echo -e "# Restore Arguments"
-echo -e "# Last Restored Volume:			$DS_LAST_RESTORED_VOLUME"
+echo -e "# Last Restored Volume:		$DS_LAST_RESTORED_VOLUME"
 echo -e "# Unique ID:					$UNIQUE_ID"
 echo -e "# User Path on target:			$DS_USER_PATH"
 echo -e "# Restore Repository: 			$DS_REPOSITORY_PATH"
 echo -e "# Internal Drive:				$DS_INTERNAL_DRIVE"
-echo -e "# Backup Count:			$DS_BACKUP_COUNT"
+echo -e "# Backup Count:				$DS_BACKUP_COUNT"
 echo -e "# dscl path:					$dscl"
-echo -e "# Internal Directory:				$INTERNAL_DN"
+echo -e "# Internal Directory:			$INTERNAL_DN"
 
 function RUNTIME_ABORT {
 # Usage:
