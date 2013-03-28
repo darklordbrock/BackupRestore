@@ -165,7 +165,7 @@ case $RESTORE_TOOL in
 	tar )
 		for i in "$DS_REPOSITORY_BACKUPS"/*HOME.tar; do
 			USERZ=`echo $(basename $i)|awk -F'_' '{print $1}'`
-			echo " >>Restore From: $i Restore To: $DS_LAST_RESTORED_VOLUME$DS_USER_PATH/"
+			echo " >>Restore From: $i Restore To: ~/Users/shared"
 			/usr/bin/tar -xf "$i" -C "$DS_LAST_RESTORED_VOLUME$DS_USER_PATH/" --strip-components=3 --keep-newer-files
 			RUNTIME_ABORT "RuntimeAbortWorkflow: Could not restore home folder for $USERZ using tar...exiting." "\t +home restored successfully"
 		done
