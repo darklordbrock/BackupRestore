@@ -36,7 +36,7 @@ echo $internal
 
 #Verify the sha1 array between the backup and Destination system, then deleting the backup on the server.
 if [ "${backup}" == "${internal}" ]; then
-	echo "There is a match!"
+	echo "There is a match"
 	else
 	echo "The backup files do not match what is on the computer."
 fi
