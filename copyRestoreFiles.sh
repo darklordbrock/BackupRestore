@@ -32,9 +32,11 @@ declare -a backup=(`openssl sha1 $DS_REPOSITORY_BACKUPS/*.tar`)
 declare -a internal=(`openssl sha1 "$DS_INTERNAL_DRIVE$DS_SHARED_PATH/"$UNIQUE_ID/*.tar`)
 
 #Verify the sha1 array between the backup and Destination system, then deleting the backup on the server.
+if [ "${backup}" == "${internal}" ]; then
+	echo "There is a match!"
+fi
 
-
-#In one of the frist boot scripts the files will be used to fill a person's homedir. 
+#In one of the first boot scripts the files will be used to fill a person's homedir. 
 
 
 exit 0
