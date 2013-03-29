@@ -28,4 +28,6 @@ cp -R $DS_REPOSITORY_BACKUPS "$DS_INTERNAL_DRIVE$DS_SHARED_PATH/"
 openssl sha1 $DS_REPOSITORY_BACKUPS/*
 openssl sha1 "$DS_INTERNAL_DRIVE$DS_SHARED_PATH/"*
 
+# Verify the sha1's between the backup and system and then delete the backup on the server.
+
 exit 0
