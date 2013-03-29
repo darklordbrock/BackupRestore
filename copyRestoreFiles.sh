@@ -35,7 +35,7 @@ declare -a internal=(`openssl sha1 "$DS_INTERNAL_DRIVE$DS_SHARED_PATH/"$UNIQUE_I
 if [ "${backup}" == "${internal}" ]; then
 	echo "There is a match!"
 	else
-	echo "The backup files do not match was is on the computer."
+	echo "The backup files do not match what is on the computer."
 fi
 
 #In one of the first boot scripts the files will be used to fill a person's homedir. 
