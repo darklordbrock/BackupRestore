@@ -22,6 +22,6 @@ export DS_REPOSITORY_BACKUPS="$DS_REPOSITORY_PATH/Backups/$UNIQUE_ID"
 export DS_SHARED_PATH="/Shared"
 
 #This should copy the backups to the local drive's shared folder. 
-/usr/bin/ditto -x $DS_REPOSITORY_BACKUPS $DS_LAST_RESTORED_VOLUME$DS_SHARED_PATH/
+cp -R $DS_REPOSITORY_BACKUPS $DS_LAST_RESTORED_VOLUME$DS_SHARED_PATH/
 
 exit 0
