@@ -34,6 +34,8 @@ declare -a internal=(`openssl sha1 "$DS_INTERNAL_DRIVE$DS_SHARED_PATH/"$UNIQUE_I
 #Verify the sha1 array between the backup and Destination system, then deleting the backup on the server.
 if [ "${backup}" == "${internal}" ]; then
 	echo "There is a match!"
+	else
+	echo "The backup files do not match was is on the computer."
 fi
 
 #In one of the first boot scripts the files will be used to fill a person's homedir. 
