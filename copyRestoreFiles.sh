@@ -24,4 +24,8 @@ export DS_SHARED_PATH="/Shared"
 #This should copy the backups to the local drive's shared folder. 
 cp -R $DS_REPOSITORY_BACKUPS "$DS_INTERNAL_DRIVE$DS_SHARED_PATH/"
 
+# Hashing the back up and what was copied to the machine.
+openssl sha1 $DS_REPOSITORY_BACKUPS/*
+openssl sha1 "$DS_INTERNAL_DRIVE$DS_SHARED_PATH/"*
+
 exit 0
