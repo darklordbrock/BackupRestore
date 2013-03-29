@@ -2,8 +2,14 @@
 
 ######
 #
+# This script runs in DeployStudio. It is based off the Restore Scripts by Rusty Myers
+# The backup tar files are copied from the server to the shared folder on the system being imaged. 
+# In one of the first boot scripts the files will be used to fill a person's homedir. 
+# The idea for this would be switch from local accounts to AD accounts, or the other way around 
 #
-#
+# Writen By
+# Kyle Brockman and Ashley Knowlesa
+# While working for the Univerity of Wisconsin Milwaukee
 ######
 
 # Set Path to internal drive
@@ -19,7 +25,7 @@ export DS_REPOSITORY_BACKUPS="$DS_REPOSITORY_PATH/Backups/$UNIQUE_ID"
 #export DS_USER_PATH="/Users"
 
 #Set Path to the shared folder
-export DS_SHARED_PATH="/Shared"
+export DS_SHARED_PATH="/Users/Shared"
 
 #This should copy the backups to the local drive's shared folder. 
 cp -R $DS_REPOSITORY_BACKUPS "$DS_INTERNAL_DRIVE$DS_SHARED_PATH/"
@@ -28,11 +34,8 @@ cp -R $DS_REPOSITORY_BACKUPS "$DS_INTERNAL_DRIVE$DS_SHARED_PATH/"
 # Hashing the back up and what was copied to the machine.
 #making a sha1 array for the backup files on the server
 declare -a backup=("`openssl sha1 $DS_REPOSITORY_BACKUPS/*.tar | awk {'print $2'}`")
-#making a sha1 array for the backup files on the Destination machine.
+#making a sha1 array for the backup files on the Destination machine. The Need for print 3 is the space in the hard drive name.
 declare -a internal=("`openssl sha1 "$DS_INTERNAL_DRIVE$DS_SHARED_PATH/"$UNIQUE_ID/*.tar | awk {'print $3'}`")
-
-echo $backup
-echo $internal
 
 #Verify the sha1 array between the backup and Destination system, then deleting the backup on the server.
 if [ "${backup}" == "${internal}" ]; then
@@ -41,8 +44,5 @@ if [ "${backup}" == "${internal}" ]; then
 	else
 	echo "The backup files do not match what is on the computer. They have not been deleted."
 fi
-
-#In one of the first boot scripts the files will be used to fill a person's homedir. 
-
 
 exit 0
