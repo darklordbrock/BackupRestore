@@ -27,9 +27,12 @@ cp -R $DS_REPOSITORY_BACKUPS "$DS_INTERNAL_DRIVE$DS_SHARED_PATH/"
 # Declaring hash arrays so that the commands will run.
 # Hashing the back up and what was copied to the machine.
 #making a sha1 array for the backup files on the server
-declare -a backup=(`openssl sha1 $DS_REPOSITORY_BACKUPS/*.tar`)
+declare -a backup=("`openssl sha1 $DS_REPOSITORY_BACKUPS/*.tar | awk {'print $2'}`")
 #making a sha1 array for the backup files on the Destination machine.
-declare -a internal=(`openssl sha1 "$DS_INTERNAL_DRIVE$DS_SHARED_PATH/"$UNIQUE_ID/*.tar`)
+declare -a internal=("`openssl sha1 "$DS_INTERNAL_DRIVE$DS_SHARED_PATH/"$UNIQUE_ID/*.tar | awk {'print $3'}`")
+
+echo $backup
+echo $internal
 
 #Verify the sha1 array between the backup and Destination system, then deleting the backup on the server.
 if [ "${backup}" == "${internal}" ]; then
