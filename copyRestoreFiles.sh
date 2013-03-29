@@ -24,14 +24,15 @@ export DS_SHARED_PATH="/Shared"
 #This should copy the backups to the local drive's shared folder. 
 cp -R $DS_REPOSITORY_BACKUPS "$DS_INTERNAL_DRIVE$DS_SHARED_PATH/"
 
+# Declaring hash arrays so that the commands will run.
 # Hashing the back up and what was copied to the machine.
 #making a sha1 array for the backup files on the server
-openssl sha1 $DS_REPOSITORY_BACKUPS/*.tar
+declare -a backup=(`openssl sha1 $DS_REPOSITORY_BACKUPS/*.tar`)
 #making a sha1 array for the backup files on the Destination machine.
-openssl sha1 "$DS_INTERNAL_DRIVE$DS_SHARED_PATH/"$UNIQUE_ID/*.tar
+declare -a internal=(`openssl sha1 "$DS_INTERNAL_DRIVE$DS_SHARED_PATH/"$UNIQUE_ID/*.tar`)
 
 #Verify the sha1 array between the backup and Destination system, then deleting the backup on the server.
-if 
+
 
 #In one of the frist boot scripts the files will be used to fill a person's homedir. 
 
