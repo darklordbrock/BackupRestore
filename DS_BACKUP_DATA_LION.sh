@@ -149,7 +149,7 @@ if grep -iE 'Logical Volume Family' $CORESTORAGESTATUS 1>/dev/null; then
 	      diskutil cs list | grep -E "$EGREP_STRING\Conversion Status" | sed -e's/\|//' | awk '{print $3}' >> $ENCRYPTSTATUS
 		    if grep -iE 'Complete' $ENCRYPTSTATUS 1>/dev/null; then 
 		      echo "Drive is Encrypted"
-			exit
+			exit 1
             fi 
         fi
       fi  
