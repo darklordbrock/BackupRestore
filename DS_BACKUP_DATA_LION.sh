@@ -123,26 +123,37 @@ fi
 
 echo "educ_backup_data.sh - v0.7.2 (Lion) beta ("`date`")"
 
-# Check to see if the drive is encrypted. If it is stop the backup script.
-if grep -iE 'Logical Volume Family' $CORESTORAGESTATUS 1>/dev/null; then
+# Check to see if the drive is encrypted. If it is stop the backup script. Script taken from rtrouton.
+CORESTORAGESTATUS="/private/tmp/corestorage.txt"
+ENCRYPTSTATUS="/private/tmp/encrypt_status.txt"
+ENCRYPTDIRECTION="/private/tmp/encrypt_direction.txt"
+DEVICE_COUNT=`diskutil cs list | grep -E "^CoreStorage logical volume groups" | awk '{print $5}' | sed -e's/(//'`
+EGREP_STRING=""
+if [ "$DEVICE_COUNT" != "1" ]; then
+  EGREP_STRING="^\| *"
+fi
+osversionlong=`sw_vers -productVersion`
+osvers=${osversionlong:3:1}
+CONTEXT=`diskutil cs list | grep -E "$EGREP_STRING\Encryption Context" | sed -e's/\|//' | awk '{print $3}'`
+ENCRYPTIONEXTENTS=`diskutil cs list | grep -E "$EGREP_STRING\Has Encrypted Extents" | sed -e's/\|//' | awk '{print $4}'`
+ENCRYPTION=`diskutil cs list | grep -E "$EGREP_STRING\Encryption Type" | sed -e's/\|//' | awk '{print $3}'`
+CONVERTED=`diskutil cs list | grep -E "$EGREP_STRING\Size \(Converted\)" | sed -e's/\|//' | awk '{print $5, $6}'`
+SIZE=`diskutil cs list | grep -E "$EGREP_STRING\Size \(Total\)" | sed -e's/\|//' | awk '{print $5, $6}'`
 
+if [[ ${osvers} -ge 7 ]]; then
+  diskutil cs list >> $CORESTORAGESTATUS
 #10.7 checking of FileVault 2.
+if grep -iE 'Logical Volume Family' $CORESTORAGESTATUS 1>/dev/null; then
       if [ "$CONTEXT" = "Present" ]; then
         if [ "$ENCRYPTION" = "AES-XTS" ]; then
 	      diskutil cs list | grep -E "$EGREP_STRING\Conversion Status" | sed -e's/\|//' | awk '{print $3}' >> $ENCRYPTSTATUS
 		    if grep -iE 'Complete' $ENCRYPTSTATUS 1>/dev/null; then 
-		      echo "FileVault 2 Encryption Complete"
-        else
-            if [ "$ENCRYPTION" = "None" ]; then
-              diskutil cs list | grep -E "$EGREP_STRING\Conversion Direction" | sed -e's/\|//' | awk '{print $3}' >> $ENCRYPTDIRECTION
-                if grep -iE 'Backward' $ENCRYPTDIRECTION 1>/dev/null; then
-                  echo "FileVault 2 Decryption Proceeding. $CONVERTED of $SIZE Decrypted"
-                elif grep -iE '-none-' $ENCRYPTDIRECTION 1>/dev/null; then
-                  echo "FileVault 2 Decryption Completed"
-                fi
+		      echo "Drive is Encrypted"
+			exit
             fi 
         fi
       fi  
+fi
 fi
 
 # Check that the backups folder is there. 
