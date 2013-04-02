@@ -123,6 +123,28 @@ fi
 
 echo "educ_backup_data.sh - v0.7.2 (Lion) beta ("`date`")"
 
+# Check to see if the drive is encrypted. If it is stop the backup script.
+if grep -iE 'Logical Volume Family' $CORESTORAGESTATUS 1>/dev/null; then
+
+#10.7 checking of FileVault 2.
+      if [ "$CONTEXT" = "Present" ]; then
+        if [ "$ENCRYPTION" = "AES-XTS" ]; then
+	      diskutil cs list | grep -E "$EGREP_STRING\Conversion Status" | sed -e's/\|//' | awk '{print $3}' >> $ENCRYPTSTATUS
+		    if grep -iE 'Complete' $ENCRYPTSTATUS 1>/dev/null; then 
+		      echo "FileVault 2 Encryption Complete"
+        else
+            if [ "$ENCRYPTION" = "None" ]; then
+              diskutil cs list | grep -E "$EGREP_STRING\Conversion Direction" | sed -e's/\|//' | awk '{print $3}' >> $ENCRYPTDIRECTION
+                if grep -iE 'Backward' $ENCRYPTDIRECTION 1>/dev/null; then
+                  echo "FileVault 2 Decryption Proceeding. $CONVERTED of $SIZE Decrypted"
+                elif grep -iE '-none-' $ENCRYPTDIRECTION 1>/dev/null; then
+                  echo "FileVault 2 Decryption Completed"
+                fi
+            fi 
+        fi
+      fi  
+fi
+
 # Check that the backups folder is there. 
 # If its missing, make it.
 if [[ ! -d "$DS_REPOSITORY_PATH/Backups" ]]; then
