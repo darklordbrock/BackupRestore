@@ -8,7 +8,7 @@
 # The idea for this would be switch from local accounts to AD accounts, or the other way around 
 #
 # Writen By
-# Kyle Brockman and Ashley Knowlesa
+# Kyle Brockman and Ashley Knowles
 # While working for the Univerity of Wisconsin Milwaukee
 ######
 
