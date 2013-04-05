@@ -1,4 +1,16 @@
 #!/bin/sh
+######
+#
+# This script runs in DeployStudio. It will check to see if the hard drive is
+# encrypted. It will check for Filevault 1 and Filevault 2 encryption. Some of the script
+# is based off of what Rusty Myers build in the backupRestore scripts. The idea for the 
+# encrytion check came from the scripts that Rich Trouton wrote to check for encryption
+# while using other management systems. 
+#
+# Writen By
+# Kyle Brockman and Ashley Knowles
+# While working for the Univerity of Wisconsin Milwaukee
+######
 
 #Point script to the internal drive.
 DS_INTERNAL_DRIVE=`system_profiler SPSerialATADataType | awk -F': ' '/Mount Point/ { print $2}'|head -n1`
