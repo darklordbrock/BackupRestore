@@ -11,13 +11,17 @@ DISPLAYERROR="BE081A10-D933-4974-B1CE-D5DCB645C344"
 
 if [ "$ENCRYPTION" = "AES-XTS" ]; then
 	echo "Drive is encrypted"
+	echo $DISPLAYERROR
 else
 	echo "Drive is not encrypted"
-	DIR=`ls /Users/ | grep -v Shared | grep -v .localized`
-	TEST=`for S in $DIR; do ls /Users/$S; done | grep .sparsebundle`	if [ "$TEST" != "" ]; then
+	DIR=`ls $DS_INTERNAL_DRIVE/Users/ | grep -v Shared | grep -v .localized`
+	TEST=`for S in $DIR; do ls $DS_INTERNAL_DRIVE/Users/$S; done | grep .sparsebundle`	
+	if [ "$TEST" != "" ]; then
 		echo "Home Directory is encrypted"
+		echo $DISPLAYERROR
 	else
 		echo "No encrypted. Backup good to go"
+		echo $RUNBACKUP
 	fi
 fi
 
