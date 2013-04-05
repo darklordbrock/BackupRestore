@@ -26,8 +26,8 @@ if [ "$ENCRYPTION" = "AES-XTS" ]; then
 	echo $DISPLAYERROR
 else
 	echo "Drive is not encrypted"
-	DIR=`ls $DS_INTERNAL_DRIVE/Users/ | grep -v Shared | grep -v .localized`
-	TEST=`for S in $DIR; do ls $DS_INTERNAL_DRIVE/Users/$S; done | grep .sparsebundle`	
+	DIR=`ls "$DS_INTERNAL_DRIVE/Users/" | grep -v Shared | grep -v .localized`
+	TEST=`for S in $DIR; do ls "$DS_INTERNAL_DRIVE/Users/$S"; done | grep .sparsebundle`	
 	if [ "$TEST" != "" ]; then
 		echo "Home Directory is encrypted"
 		echo $DISPLAYERROR
