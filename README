@@ -6,7 +6,7 @@ This script will set the path to the internal drive, set paths to the right User
 
 encryption check script
 
-This script checks for an encrypted drive in 10.6, 10.7, and 10.8. The script has been tested for all three operating systems and works. It sets the script to look at the internal drive and declares what encryption is. Then after running to see if the drive is encrypted it will point to different workflows. One workflow will give an error message stating that the drive is encrypted and to unencrypt it first before backing up the drive. The if then statement first checks 10.7 and 10.8 and then if it passes (meaning the drive isn't encrypted) then it will check for 10.6 encryption.
+This script is designed to work in DeployStudio. This script checks for an encrypted drive in 10.6, 10.7, and 10.8. The script has been tested for all three operating systems and works. It sets the script to look at the internal drive and declares what encryption is. Then after running to see if the drive is encrypted it will point to different workflows. One workflow will give an error message stating that the drive is encrypted and to unencrypt it first before backing up the drive. The if then statement first checks 10.7 and 10.8 and then if it passes (meaning the drive isn't encrypted) then it will check for 10.6 encryption.
 
 -------------
 
