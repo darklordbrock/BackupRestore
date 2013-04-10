@@ -1,9 +1,22 @@
 copyRestoreFiles Script
 
+This script will set the path to the internal drive, set paths to the right User directory, and copy the backup to the local drive's shared folder.
+
+-------------
+
 encryption check script
+
+This script checks for an encrypted drive in 10.6, 10.7, and 10.8. The script has been tested for all three operating systems and works. It sets the script to look at the internal drive and declares what encryption is. Then after running to see if the drive is encrypted it will point to different workflows. One workflow will give an error message stating that the drive is encrypted and to unencrypt it first before backing up the drive. The if then statement first checks 10.7 and 10.8 and then if it passes (meaning the drive isn't encrypted) then it will check for 10.6 encryption.
+
+-------------
 
 First boot before and after JSS scripts
 
+First boot before JSS script sets time server, time zone, grabs the Generated UID of everyone and adds everyone to the nested groups of lpadmin and App Store. Then it will create a local admin group and a local time machine group. The script finished up with disabling iCloud.
+
+First boot after JSS script adds a jssworker account to the local admin group. It checks for JAMF binary and if it isn't there the script will exit. If it is there it will set the department in JSS based on what we name the machine. It will also check for any JAMF policies that need to be run and will run then and then triggers all manual printer installs. Next an if then statement will check to see if the computer is connect to active directory and will then make a new user home folder for the active directory user account. It will then untar the backup in the shared folder and move the files over to the new home folder. After it will set the correct permissions on the folders so there won't be any issues.
+
+------------
 
 BackupRestore Scripts
 Current Version - 0.7.1
