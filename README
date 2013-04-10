@@ -1,3 +1,13 @@
+General Overview:
+
+You would run these scripts in this order:
+1. encryptioncheck - Make sure it is not encrypted before backing up.
+2. DS_BACKUP_DATA_LION - back up computer
+3. Image computer
+4. firstbootBeforeJSS
+5. firstbootAfterJSS
+6. copyRestoreFile
+
 copyRestoreFiles Script
 
 This script will set the path to the internal drive, set paths to the right User directory, and copy the backup to the local drive's shared folder.
