@@ -64,10 +64,6 @@ export DS_INTERNAL_DRIVE=`system_profiler SPSerialATADataType|awk -F': ' '/Mount
 export DS_USER_PATH="/Users"
 # Default backup tool
 export BACKUP_TOOL="tar"
-# Filevault backup 
-## What the fuck is this for? 
-## It's the filename of the backup of the Filevault keys (FilevaultKeys.tar). Not currently implemented
-#export FilevaultKeys="FilevaultKeys"
 
 # Parse command line arguments
 while getopts :e:q:cv:u:d:t:h opt; do
@@ -190,7 +186,6 @@ do
 		DS_ARCHIVE="$DS_REPOSITORY_BACKUPS/$USERZ-HOME"
 		
 		# Remove users cache? If set to 1, then yes.
-		# These may not work...need to check.
 		if [[ $RMCache = 1 ]]; then
 			# Remove users home folder cache
 			echo -e "\t-Removing user cache..."
@@ -211,10 +206,6 @@ do
 			ditto -c -k --sequesterRsrc --keepParent "$DS_BACKUP" "$DS_ARCHIVE.zip" 
 			RUNTIME_ABORT "RuntimeAbortWorkflow: Error: Could not back up home" "\t+Sucess: Home successfully backed up using ditto"
 			 	;;
-			# rsync )
-			# #Backup using rsync
-			# /usr/bin/rsync -av --update "$DS_BACKUP" "$DS_ARCHIVE.rsync/"
-			# 	;;
 			* )
 			echo "RuntimeAbortWorkflow: Backup Choice: $BACKUP_TOOL. Invalid flag, no such tool...exiting." 
 			help
@@ -225,8 +216,6 @@ do
 		/usr/libexec/PlistBuddy -c "add :backuptool string $BACKUP_TOOL" "$DS_REPOSITORY_BACKUPS/$USERZ.BACKUP.plist" &>/dev/null
 		
 		# Backup User Account
-		## Check for OriginalAuthenticationAuthority. Only directory accounts have it.
-		# While I don't currently have a mobile account from a directory service, I've asked someone else to test it. It seems to work! Thanks to Nassy on IRC for testing!
 		if [[ ! `"$dscl" -f "$INTERNAL_DN" localonly -read "/Local/Target/Users/$USERZ" |grep -E "OriginalAuthenticationAuthority"` ]]; then #this is a local account
 			echo -e "\t+Sucess: $USERZ is a Local account"
 			# Perhaps All I need to do is backup the dslocal users plist?
@@ -234,28 +223,11 @@ do
 				cp -p "${DS_INTERNAL_DRIVE}/var/db/dslocal/nodes/Default/users/$USERZ.plist" "${DS_REPOSITORY_BACKUPS}/$USERZ.plist"
 				RUNTIME_ABORT "RuntimeAbortWorkflow: Error: Could not back up user account" "\t+Sucess: User account successfully backed up"
 			fi
-			# User data backup plist
-			#DS_USER_BACKUP_PLIST="$DS_REPOSITORY_BACKUPS/$USERZ-USER.plist"
-			# Check if user is an admin
-			#if [[ -z `"$dscl" -plist -f "$INTERNAL_DN" localonly -read "/Local/Target/Groups/admin" "GroupMembership"|grep -w "$USERZ"` ]]; then
-				#/usr/libexec/PlistBuddy -c "add :isAdmin string no" "$DS_USER_BACKUP_PLIST"
-				#else
-				#/usr/libexec/PlistBuddy -c "add :isAdmin string yes" "$DS_USER_BACKUP_PLIST"
-				#echo -e "\t+Sucess: $USERZ is an admin"
-				#fi
-
 		else
 			echo -e "\t+Sucess: $USERZ is a Mobile account"
 			echo -e "\t+Sucess: account excluded for mobile account"
 			# User data backup plist
 			DS_USER_BACKUP_PLIST="$DS_REPOSITORY_BACKUPS/$USERZ-NETUSER.plist"
-			# Check if user is an admin
-			#if [[ -z `"$dscl" -plist -f "$INTERNAL_DN" localonly -read "/Local/Target/Groups/admin" "GroupMembership"|grep -w "$USERZ"` ]]; then
-			#	/usr/libexec/PlistBuddy -c "add :isAdmin string no" "$DS_USER_BACKUP_PLIST" 2>/dev/null
-			#else
-			#	/usr/libexec/PlistBuddy -c "add :isAdmin string yes" "$DS_USER_BACKUP_PLIST" 2>/dev/null
-			#	echo -e "\t+Sucess: $USERZ is an admin"
-			#fi
 		fi
 	else 
 		echo -e "<>Excluding $USERZ" 
@@ -265,121 +237,3 @@ done
 
 echo "educ_backup_data.sh - end"
 exit 0
-
-#############################################################################################
-
-## To Do
-#
-# Switch to Serial Number?
-# Plan for "Deleted Users" folder
-# Log paths to backup folders
-# Backup More User Records?? 
-# 	/var/db/dslocal/nodes/Default/sharepoints/User Public Folder.plist
-# 	groups/com.applesharepoint.group.[12].plist
-# 	Restore _lpadmin.plist access, _appserveradm.plist, _appserverusr.plist, 
-
-## Changes
-# 
-# Thursday, December, 1, 2011 - v0.7.2
-# 	- Removing code for Lion testing
-# 	- Backing up dslocal user.plist instead of all the records individually.
-# 	- Added in ditto for backing up the home. Credit to Miles Muri for the code.
-#	- Miles Muri also submitted a lot of code and comments that helped prep for Lion. Thank You!
-# 
-# Wednesday, June, 22, 2011 - v0.7.1
-#	- Added flag to remove user cache folder before backing up home.
-# 	- Testing new DS_INTERNAL_DRIVE variable command.
-# 
-# Tuesday, April, 19, 2011 - v0.7
-# 	- Updated code to use new user deliminator from '.' to '-'
-# 
-# Saturday, April, 16, 2011 - v0.6
-# 	- Lots of little error fixes from midnight coding.
-# 	- Tried to unify script messages
-# 
-# Monday, April, 14, 2011 - v0.5
-#	- Change name of user plists and home backups to account for names with '.' in them.
-# 
-# Monday, March, 28, 2011 - v0.4.7
-# 	- Moved dscl and internal directory variables outside and above for loop. 
-#	- Uncommented test variables. Easier to troubleshoot the script.
-# 
-# Tuesday, March 22, 2011 - v0.4.6
-# 	- Filevault restores done with first boot scripts
-# 	- Removed extra plist created with backup tool name. If I need this, I'll use the same plist as the user details.
-# 	- Added AuthenticationAuthority and HomeDirectory to plist backup
-# 	- Some dscl and PlistBuddy errors show when running scripts, this is normal.
-# 	- Added "deleted users" folder to exclude list
-# 
-# Friday, March 18, 2011 - v0.4.5
-# 	- Changed test for mobile/network accounts, again. Now seems to work!
-# 
-# Wednesday, Febuary 09, 2011 - v0.4.4
-# 	- Adding to git
-# 	- Added rsync as an backup tool option
-# 	- Removed Unique ID from user data, its only used for the backup folder.
-# 	- Changed test for mobile/network accounts. Should work better.
-# 
-# Tuesday, February 01, 2011
-# 	- Bug fixing the tar and ditto backups and variables
-# 
-# Monday, January 31, 2011
-# 	- Added flag to backup using ditto or tar, check help
-# 
-# Thursday, January 27, 2011
-# 	- Chenged the way we check for network and mobile accounts. Now looking at dscl for OriginalNodeName
-# 		Thanks to hunterbj
-#
-# Tuesday, January 18, 2011
-# 	- Adding variables that can be set within DeployStudio
-#		Icluding: Users to skip, Target volume, User path on target, and Backup destination
-# 
-# Monday December 20, 2010 
-# 	- Fixed issue with user account not showing in system preferences after restoring.
-# 	- Added support for restoring admin rights for network users
-
-# How to Backup Filevault homes
-# 	Filevault accounts have GeneratedUID
-# 	dscl . read /Users/file HomeDirectory | awk '{print $2}'
-# 	Backup sparseimage
-# 	/Users/file/file.sparsebundle
-# 	- Backup keychain master passwords and cert
-# 	- /Library/Keychain/FileVaultMaster.cer
-# 	- /Library/Keychain/FileVaultMaster.keychain
-# 	Recreate user - Wonder if its necessary to restore the accounts?
-# 	/System/Library/CoreServices/ManagedClient.app/Contents/Resources/createmobileaccount -n usershortname
-# 	Restore sparesimage
-
-# Written by Rusty Myers
-# 
-# Credit to Pete Akins and his amazingly awesome createUser.pkg script. 
-# It was instrumental in learning how to backup and create users.
-
-# ****** Rusty's musings on ditto ******
-# Create sparsedisk image with options for quota? size? 
-# hdiutil create -size 1g -type SPARSE -fs HFS+ -volname "$USERZ" "$DS_ARCHIVE.ditto.dmg
-# hdiutil attach "$DS_ARCHIVE.ditto.dmg"
-# -z backups up with gzip -j flag will compress it with bzip2 and -k will use PKZip
-# /usr/bin/ditto -vXcz --keepParent "$DS_BACKUP" "$DS_ARCHIVE.cpio.gz" && echo -e "Home successfully backed up using ditto" || echo -e "Could not back up home"
-# ****** Rusty's musings on ditto ******
-
-# ****** Rusty's musings on detecting mobile and local accounts ******
-## Old way to check for network and mobile accounts. The idea is that local accounts have a UID < 1000 and network accounts are greater than 1000. May not hold true universally.
-# UserID=`"$dscl" -f "$INTERNAL_DN" localonly -read "/Local/Target/Users/$USERZ" uid|awk '{print $2}'`
-# if [[ "$UserID" -gt "1000" ]]; then #this is a mobile account
-## Check dscl for "OriginalNodeName" if its a mobile account. If the account doesn't exist, its a network account. 
-# if [[ `"$dscl" -f "$INTERNAL_DN" localonly -read "/Local/Target/Users/$USERZ" dsAttrTypeStandard:OriginalNodeName|grep -E "^OriginalNodeName:"` ]]; then #this is a mobile account
-## Another Method that should work: check the Authentication Authority for ShadowHash. Only local accounts have it.
-# if [[ `"$dscl" -f "$INTERNAL_DN" localonly -read "/Local/Target/Users/$USERZ" dsAttrTypeStandard:AuthenticationAuthority|grep -E "Shadow"` ]]; then #this is a local account
-## Check for PrimaryGroupID of 20. All local users should have the ID of 20, DS accounts will be different. Probably not the best way to check. Broken in 10.7
-# if [[ `"$dscl" -f "$INTERNAL_DN" localonly -read "/Local/Target/Users/$USERZ" dsAttrTypeStandard:PrimaryGroupID|grep -E "20"` ]]; then #this is a local account
-# ****** Rusty's musings on detecting mobile and local accounts ******
-
-## local accounts don't work in 10.7 yet anyway...
-## dscl doesn't work much... changed to not falsely id local accounts
-## Before, this would spit out a bunch of error messages, but since it 
-## wasn't equal to "OriginalAuthenticationAuthority", then it thought it 
-## was local. It wasn't. :-(
-## this should work if dscl worked.
-## TODO - make this work with another tool to check network accounts
-## id -n might work with | to sed, I'm not well enough versed...
