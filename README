@@ -1,12 +1,12 @@
 General Overview:
 
-You would run these scripts in this order:
-1. encryptioncheck - Make sure it is not encrypted before backing up.
-2. DS_BACKUP_DATA_LION - back up computer
-3. Image computer
-4. firstbootBeforeJSS
-5. firstbootAfterJSS
-6. copyRestoreFile
+You would run these scripts in this order in DeployStudio:
+1a. encryptioncheck - Make sure it is not encrypted before backing up.
+1b. DS_BACKUP_DATA_LION - back up computer
+1c. Image computer
+1d. copyRestoreFile
+2. firstbootBeforeJSS
+3. firstbootAfterJSS
 
 copyRestoreFiles Script
 
