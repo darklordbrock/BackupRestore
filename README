@@ -14,7 +14,7 @@ First boot before and after JSS scripts
 
 First boot before JSS script sets time server, time zone, grabs the Generated UID of everyone and adds everyone to the nested groups of lpadmin and App Store. Then it will create a local admin group and a local time machine group. The script finished up with disabling iCloud.
 
-First boot after JSS script adds a jssworker account to the local admin group. It checks for JAMF binary and if it isn't there the script will exit. If it is there it will set the department in JSS based on what we name the machine. It will also check for any JAMF policies that need to be run and will run then and then triggers all manual printer installs. Next an if then statement will check to see if the computer is connect to active directory and will then make a new user home folder for the active directory user account. It will then untar the backup in the shared folder and move the files over to the new home folder. After it will set the correct permissions on the folders so there won't be any issues.
+First boot after JSS script adds a JSS account to the local admin group. It checks for JAMF binary and if it isn't there the script will exit. If it is there it will set the department in JSS based on what we name the machine. It will also check for any JAMF policies that need to be run and will install the manual printer installs. Next an if then statement will check to see if the computer is connect to active directory and will then make a new user home folder for the active directory user account. It will then untar the backup in the shared folder and move the files over to the new home folder. After it will set the correct permissions on the home folders so there won't be any issues for the user.
 
 ------------
 
