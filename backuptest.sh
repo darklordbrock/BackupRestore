@@ -57,24 +57,11 @@ export EXCLUDE=( "shared" "guest" "deleted users" "ladmin" )
 #Load CocoaDialog application.
 CD="$HOME/CocoaDialog.app/Contents/MacOS/CocoaDialog"
 
-rv=`$CD standard-inputbox --title "Please enter a user id" \
---informative-text "Please enter a user id" \
+ui=`$CD standard-inputbox --title "Please Enter a Value" \
+--informative-text "Please enter a Unique ID" \
 --no-newline --float`
 
-while [ $PASSONE != $PASSTWO ];do
-
-
-	#Sets the nothing variable 
-	NOTHING1="1"
-
-		while [ $USERINPUT -eq $NOTHING1 ];do
-
-
-		done
-
-	NOTHING2="2"
-
-done
+UNIQUE_ID=`echo $ui | awk '{ print $2 }'`
 
 
 # Add Times? UNIQUE_ID=`date "+%Y%m%d%S"`
