@@ -55,17 +55,26 @@ export EXCLUDE=( "shared" "guest" "deleted users" "ladmin" )
 #export UNIQUE_ID=`echo "$DS_PRIMARY_MAC_ADDRESS"|tr -d ':'` 
 
 #Load CocoaDialog application.
-CD="$HOME/Applications/CocoaDialog.app/Contents/MacOS/CocoaDialog"
+CD="$HOME/CocoaDialog.app/Contents/MacOS/CocoaDialog"
 
-rv=`$CD standard-inputbox --text "We need to make sure you see this message" \
---informative-text "(Yes, the message was to inform you about itself)" \
+rv=`$CD standard-inputbox --title "Please enter a user id" \
+--informative-text "Please enter a user id" \
 --no-newline --float`
-if [ "$rv" == "1" ]; then
-echo "User said OK"
-elif [ "$rv" == "2" ]; then
-echo "Canceling"
-exit
-fi
+
+while [ $PASSONE != $PASSTWO ];do
+
+
+	#Sets the nothing variable 
+	NOTHING1="1"
+
+		while [ $USERINPUT -eq $NOTHING1 ];do
+
+
+		done
+
+	NOTHING2="2"
+
+done
 
 
 # Add Times? UNIQUE_ID=`date "+%Y%m%d%S"`
