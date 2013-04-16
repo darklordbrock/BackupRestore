@@ -20,7 +20,7 @@ export DS_SHARED_PATH="/Users/Shared"
 CD="$HOME/Applications/CocoaDialog.app/Contents/MacOS/CocoaDialog"
 
 ### Example 1
-rv=`$CD ok-msgbox --text "We need to make sure you see this message" \
+rv=`$CD ok-msgbox --text "Please input the Unique ID for the Restore" \
 --informative-text "(Yes, the message was to inform you about itself)" \
 --no-newline --float`
 
