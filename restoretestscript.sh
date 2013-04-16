@@ -16,13 +16,16 @@ export DS_SHARED_PATH="/Users/Shared"
 #This should copy the backups to the local drive's shared folder. 
 #cp -R $DS_REPOSITORY_BACKUPS "$DS_INTERNAL_DRIVE$DS_SHARED_PATH/"
 
-# Enter unique_id that is in DeployStudio.
-echo "Please enter some input: "
-read input_variable
-echo "You entered: $input_variable"
+#sets path to CocoaDialog
+CD="$HOME/Applications/CocoaDialog.app/Contents/MacOS/CocoaDialog"
 
-if [ "$input_variable" = "$UNIQUE_ID" ]; then
-	export DS_REPOSITORY_BACKUPS="$DS_REPOSITORY_PATH/Backups/$input_variable"
+### Example 1
+rv=`$CD ok-msgbox --text "We need to make sure you see this message" \
+--informative-text "(Yes, the message was to inform you about itself)" \
+--no-newline --float`
+
+if [ "$rv" = "$UNIQUE_ID" ]; then
+	export DS_REPOSITORY_BACKUPS="$DS_REPOSITORY_PATH/Backups/$rv"
 	cp -R $DS_REPOSITORY_BACKUPS "$DS_INTERNAL_DRIVE$DS_SHARED_PATH/"
 else
 	echo "The is no match"
