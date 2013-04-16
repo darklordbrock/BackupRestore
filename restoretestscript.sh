@@ -25,7 +25,7 @@ export DS_SHARED_PATH="/Users/Shared"
 #This should copy the backups to the local drive's shared folder. 
 #cp -R $DS_REPOSITORY_BACKUPS "$DS_INTERNAL_DRIVE$DS_SHARED_PATH/"
 
-dropdown=`$CD standard-dropdown --title "Choose a Backup" --string-output --no-newline --text "Please choose a baskup to restore" --items "ls ~/Backup/" `
+dropdown=`$CD standard-dropdown --title "Choose a Backup" --string-output --no-newline --text "Please choose a baskup to restore" --items "ls ~/Backup" `
 
 backup=`echo $dropdown | awk '{ print $2 }'`
 
