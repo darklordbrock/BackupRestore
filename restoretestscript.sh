@@ -18,11 +18,26 @@ u=`ls $DS_REPOSITORY_PATH/Backups/ | grep -v ".DS_Store"`
 dropdown=`$CD standard-dropdown --title "Choose a Backup" --string-output --no-newline --text "Please choose a baskup to restore" --items $u `
 
 #get the backup variable that is chosen.
-backup=`echo $dropdown | awk '{ print $2 }'`
+restore=`echo $dropdown | awk '{ print $2 }'`
 
 #This should set what the backup folder is so it can be copied.
-export DS_REPOSITORY_BACKUPS="$DS_REPOSITORY_PATH/Backups/$backup"
+export DS_REPOSITORY_BACKUPS="$DS_REPOSITORY_PATH/Backups/$restore"
 #This should copy the backups to the local drive's shared folder. 
 cp -R $DS_REPOSITORY_BACKUPS "$DS_INTERNAL_DRIVE$DS_SHARED_PATH/"
+
+# Declaring hash arrays so that the commands will run.
+# Hashing the back up and what was copied to the machine.
+#making a sha1 array for the backup files on the server
+declare -a backup=("`openssl sha1 $DS_REPOSITORY_BACKUPS/*.tar | awk {'print $2'}`")
+#making a sha1 array for the backup files on the Destination machine. The Need for print 3 is the space in the hard drive name.
+declare -a internal=("`openssl sha1 "$DS_INTERNAL_DRIVE$DS_SHARED_PATH/"$UNIQUE_ID/*.tar | awk {'print $3'}`")
+
+#Verify the sha1 array between the backup and Destination system, then deleting the backup on the server.
+if [ "${backup}" == "${internal}" ]; then
+	echo "There is a match"
+	rm -fr $DS_REPOSITORY_BACKUPS/
+	else
+	echo "The backup files do not match what is on the computer. They have not been deleted."
+fi
 
 exit 0
