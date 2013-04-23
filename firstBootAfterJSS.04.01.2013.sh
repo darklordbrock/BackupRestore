@@ -104,7 +104,7 @@ else
 			FILEZ=`ls -a /tmp/$U/*/*/Users/$U/`
 			for F in $FILEZ; do
 				#Copy the files into the home dir
-				cp -Rf /tmp/$U/*/*/Users/$U/$F /Users/$U/
+				cp -Rfp /tmp/$U/*/*/Users/$U/$F /Users/$U/
 				#Security remove the files from the tmp location
 				rm -fr /tmp/$U
 			done
