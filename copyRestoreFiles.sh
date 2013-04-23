@@ -16,7 +16,7 @@
 export DS_INTERNAL_DRIVE=`system_profiler SPSerialATADataType | awk -F': ' '/Mount Point/ { print $2}'|head -n1`
 
 # Unique ID for plist and common variable for scripts
-export UNIQUE_ID=`echo "$DS_PRIMARY_MAC_ADDRESS"|tr -d ':'` # Add Times? UNIQUE_ID=`date "+%Y%m%d%S"`
+export UNIQUE_ID=`echo "$DS_PRIMARY_MAC_ADDRESS"|tr -d ':'`
 
 # DS Script to backup user data with tar to Backups folder on repository.
 export DS_REPOSITORY_BACKUPS="$DS_REPOSITORY_PATH/Backups/$UNIQUE_ID"
@@ -34,6 +34,9 @@ fi
 
 #Set Path to the shared folder
 export DS_SHARED_PATH="/Users/Shared"
+
+#put the Unique ID into a file on the system being restored to.
+echo $UNIQUE_ID > $DS_INTERNAL_DRIVE/private/var/db/.uitsRestoreID
 
 #This should copy the backups to the local drive's shared folder. 
 cp -R $DS_REPOSITORY_BACKUPS "$DS_INTERNAL_DRIVE$DS_SHARED_PATH/"
