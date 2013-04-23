@@ -103,7 +103,7 @@ else
 				#Copy the files into the home dir
 				cp -Rf /tmp/$U/*/*/Users/$U/$F /Users/$U/
 				#Security remove the files from the tmp location
-				srm -fr /tmp/$U
+				rm -fr /tmp/$U
 			done
 			
 			#Set Permissions on the home folders
