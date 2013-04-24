@@ -14,6 +14,14 @@ CD="/Applications/Utilities/CocoaDialog.app/Contents/MacOS/CocoaDialog"
 #sets path to the backup folder in deploystudio.
 u=`ls $DS_REPOSITORY_PATH/Backups/ | grep -v ".DS_Store"`
 
+#if for Macintosh HD check
+
+if [ "${DS_INTERNAL_DRIVE}" == "/Volumes/Macintosh HD" ]; then
+	echo $UNIQUE_ID > "/Volumes/Macintosh HD/private/var/db/.uitsRestoreID"
+else
+	exit 1
+fi
+
 #dropdown that lists all folders in the backup folder.
 dropdown=`$CD standard-dropdown --title "Choose a Backup" --string-output --no-newline --text "Please choose a baskup to restore" --items $u `
 
