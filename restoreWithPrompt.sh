@@ -4,7 +4,7 @@
 export DS_INTERNAL_DRIVE=`system_profiler SPSerialATADataType | awk -F': ' '/Mount Point/ { print $2}'|head -n1`
 
 #Sets UNIQUE_ID
-UNIQUE_ID=`echo $ui | awk '{ print $2 }'`
+UNIQUE_ID=`echo "$DS_PRIMARY_MAC_ADDRESS"|tr -d ':'`
 
 #Set Path to the shared folder
 export DS_SHARED_PATH="/Users/Shared"
