@@ -55,12 +55,13 @@ export EXCLUDE=( "shared" "guest" "deleted users" "ladmin" )
 #export UNIQUE_ID=`echo "$DS_PRIMARY_MAC_ADDRESS"|tr -d ':'` 
 
 #Load CocoaDialog application.
-CD="$HOME/CocoaDialog.app/Contents/MacOS/CocoaDialog"
+CD="/Applications/Utilities/CocoaDialog.app/Contents/MacOS/CocoaDialog"
 
 ui=`$CD standard-inputbox --title "Please Enter a Value" \
 --informative-text "Please enter a Unique ID" \
 --no-newline --float`
 
+#Sets UNIQUE_ID based on the output of the input box.
 UNIQUE_ID=`echo $ui | awk '{ print $2 }'`
 
 
