@@ -3,6 +3,7 @@
 # Set Path to internal drive
 export DS_INTERNAL_DRIVE=`system_profiler SPSerialATADataType | awk -F': ' '/Mount Point/ { print $2}'|head -n1`
 
+#Sets UNIQUE_ID
 UNIQUE_ID=`echo $ui | awk '{ print $2 }'`
 
 #Set Path to the shared folder
@@ -14,8 +15,7 @@ CD="/Applications/Utilities/CocoaDialog.app/Contents/MacOS/CocoaDialog"
 #sets path to the backup folder in deploystudio.
 u=`ls $DS_REPOSITORY_PATH/Backups/ | grep -v ".DS_Store"`
 
-#if for Macintosh HD check
-
+#if then statement to check if the target volume matches what it should be. It will then make a file that has the unique id saved in it. If the statement fails it will exit cleanly.
 if [ "${DS_INTERNAL_DRIVE}" == "/Volumes/Macintosh HD" ]; then
 	echo $UNIQUE_ID > "/Volumes/Macintosh HD/private/var/db/.uitsRestoreID"
 else
