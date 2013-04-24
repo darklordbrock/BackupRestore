@@ -21,6 +21,14 @@ export UNIQUE_ID=`echo "$DS_PRIMARY_MAC_ADDRESS"|tr -d ':'` # Add Times? UNIQUE_
 # DS Script to backup user data with tar to Backups folder on repository.
 export DS_REPOSITORY_BACKUPS="$DS_REPOSITORY_PATH/Backups/$UNIQUE_ID"
 
+#if for Macintosh HD check
+
+if [ "${DS_INTERNAL_DRIVE}" == "/Volumes/Macintosh HD" ]; then
+	echo $UNIQUE_ID > "/Volumes/Macintosh HD/private/var/db/.uitsRestoreID"
+else
+	exit 1
+fi
+
 # Set Path to the folder with home folders
 #export DS_USER_PATH="/Users"
 
