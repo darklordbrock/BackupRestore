@@ -18,7 +18,7 @@ else
 	
 	
 	#Find the users that were on the machine
-	USERZ=`ls /Users/Shared/$BACKUP/ | grep -v ".localized" | grep -v ".BACKUP.plist" | grep -v ".plist"  | sed 's/-HOME.tar//g'`
+	USERZ=`ls /Users/Shared/$BACKUP/ | grep -v ".localized" | grep -v ".BACKUP.plist" | grep -v ".plist" | grep -v ".DS_Store" | sed 's/-HOME.tar//g'`
 
 	for U in $USERZ; do
 		#Making the new home folder for the AD user account
