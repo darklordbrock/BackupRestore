@@ -9,11 +9,13 @@ export TIME=`date "+%Y.%m.%d"`
 
 export FULLTIME=`date "+%Y.%m.%d %H:%M:%S"`
 
-export BACKUP=$TIME-`hostname`
-
 export M="MacBackups"
 
 export bkVolume="/tmp/$M"
+
+export serial=`system_profiler | grep "Serial Number (system)" | awk '{print $4}'`
+
+export BACKUP=$TIME-$serial-`hostname`
 
 # create a named pipe
 rm -f /tmp/hpipe
