@@ -34,17 +34,17 @@ echo -n . >&3
 caffeinate &
 
 #Make the mount point if it does not already present.
-if [[ ! -d "/tmp/$M" ]]; then
-	mkdir "/tmp/$M"
+if [[ ! -d "$bkVolume" ]]; then
+	mkdir $bkVolume
 fi
 
 #Umount anything that might be mounted to the backup point 
-umount /tmp/$M
+umount $bkVolume
 
 sleep 10
 
 #mount the backup share
-mount_smbfs //server.local/$M /tmp/$M
+mount_smbfs //server.local/$M $bkVolume
 
 sleep 10
 
@@ -62,13 +62,13 @@ else
 fi
 
 #make the backup of the drive
-hdiutil create /tmp/MacBackups/AutoDelete/$BACKUP.dmg -verbose -format UDBZ -nocrossdev -srcfolder /
+hdiutil create $bkVolume/AutoDelete/$BACKUP.dmg -verbose -format UDBZ -nocrossdev -srcfolder /
 
 #scan the image for restore
-asr imagescan --source $BACKUP --verbose
+asr imagescan --source $bkVolume/$BACKUP --verbose
 
 #check the backup
-hdiutil verify /tmp/MacBackups/AutoDelete/$BACKUP.dmg
+hdiutil verify $bkVolume/AutoDelete/$BACKUP.dmg
 
 if [[ $? == 0 ]]; then
 	echo "Backup is good"
