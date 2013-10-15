@@ -10,17 +10,17 @@ export serial=`system_profiler | grep "Serial Number (system)" | awk '{print $4}
 caffeinate &
 
 #Make the mount point if it does not already present.
-if [[ ! -d "/tmp/$M" ]]; then
-	mkdir "/tmp/$M"
+if [[ ! -d "$bkVolume" ]]; then
+	mkdir $bkVolume
 fi
 
 #Umount anything that might be mounted to the backup point 
-umount /tmp/$M
+umount $bkVolume
 
 sleep 10
 
 #mount the backup share
-mount_smbfs //server.local/$M /tmp/$M
+mount_smbfs //server.local/$M $bkVolume
 
 sleep 10
 
