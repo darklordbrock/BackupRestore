@@ -6,7 +6,7 @@ export bkVolume="/tmp/$M"
 
 export serial=`system_profiler | grep "Serial Number (system)" | awk '{print $4}'`
 
-#Stop the machine from sleeping for 24 Hours
+#Stop the machine from sleeping
 caffeinate &
 
 #Make the mount point if it does not already present.

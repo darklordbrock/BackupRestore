@@ -30,7 +30,7 @@ mkfifo /tmp/hpipe
 exec 3<> /tmp/hpipe
 echo -n . >&3
 
-#Stop the machine from sleeping for 24 Hours
+#Stop the machine from sleeping
 caffeinate &
 
 #Make the mount point if it does not already present.
