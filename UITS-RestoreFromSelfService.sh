@@ -69,7 +69,7 @@ mkdir $restore
 #attach the backup
 hdiutil attach $bkVolume/AutoDelete/$serial* -mountpoint $restore
 
-USERZ=`ls $restore/Users/* | grep -v ".localized" | grep -v "localadmin"`
+USERZ=`ls $restore/Users/ | grep -v ".localized" | grep -v "localadmin" | grep -v "Shared"`
 
 for U in $USERZ; do
 	#Making the new home folder for the AD user account
@@ -109,6 +109,10 @@ hdiutil detach $restore
 #code of code to restore the user dirs
 ######
 
+#reset the autodelete. 
+touch $bkVolume/AutoDelete/$serial*
+
+#allow the machine to sleep again
 killall caffeinate
 
 exit 0
