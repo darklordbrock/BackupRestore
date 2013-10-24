@@ -89,10 +89,9 @@ fi
 exec 3>&-
 
 # wait for all background jobs to exit
-wait
 rm -f /tmp/hpipe
 
-#E-mail Techs the backup is completed. 
+#Email Techs the backup is completed 
 
 mail -s "Backup Complete for `hostname` at `date "+%Y.%m.%d %H:%M:%S"`" ds-techs@uwm.edu ds-fte@uwm.edu <<EOF
 
