@@ -70,7 +70,9 @@ mkdir $restore
 
 u=`ls $bkVolume/AutoDelete/ | grep -v ".DS_Store"`
 
-pickBK=`$CD standard-dropdown --title "Choose a Backup" --string-output --no-newline --text "Please choose a baskup to restore" --items $u`
+dropdown=`$CD standard-dropdown --title "Choose a Backup" --string-output --no-newline --text "Please choose a baskup to restore" --items $u`
+
+pickBK=`echo $dropdown | awk '{ print $2 }'`
 
 #attach the backup
 hdiutil attach $bkVolume/AutoDelete/$pickBK -mountpoint $restore
