@@ -8,6 +8,8 @@ export serial=`system_profiler | grep "Serial Number (system)" | awk '{print $4}
 
 export restore="/tmp/restore"
 
+CD="/Applications/Utilities/CocoaDialog.app/Contents/MacOS/CocoaDialog"
+
 #Stop the machine from sleeping
 caffeinate &
 
@@ -66,8 +68,12 @@ fi
 
 mkdir $restore
 
+u=`ls $bkVolume/AutoDelete/ | grep -v ".DS_Store"`
+
+pickBK=`$CD standard-dropdown --title "Choose a Backup" --string-output --no-newline --text "Please choose a baskup to restore" --items $u`
+
 #attach the backup
-hdiutil attach $bkVolume/AutoDelete/$serial* -mountpoint $restore
+hdiutil attach $bkVolume/AutoDelete/$pickBK -mountpoint $restore
 
 USERZ=`ls $restore/Users/ | grep -v ".localized" | grep -v "localadmin" | grep -v "Shared"`
 
@@ -110,7 +116,7 @@ hdiutil detach $restore
 ######
 
 #reset the autodelete. 
-touch $bkVolume/AutoDelete/$serial*
+touch $bkVolume/AutoDelete/$pickBK
 
 #allow the machine to sleep again
 killall caffeinate
