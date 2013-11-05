@@ -21,18 +21,21 @@ fi
 #Umount anything that might be mounted to the backup point 
 umount $bkVolume
 
-sleep 10
+sleep 2
 
 #mount the backup share
 mount_smbfs //server.local/$M $bkVolume
 
-sleep 10
+sleep 3
 
 
 if mount | grep $bkVolume; then
-	echo "SAMBA is Mounted"
+	
+    echo "SAMBA is Mounted"
+    
 else
-	echo "Samba is NOT MOUNTED"
+	
+    echo "Samba is NOT MOUNTED"
 	mail -s "Restored Failed for `hostname` at `date "+%Y.%m.%d %H:%M:%S"`" ds-techs@uwm.edu ds-fte@uwm.edu <<EOF
 
 	Hello,
@@ -52,10 +55,14 @@ fi
 
 ADWORK=`id brockma9`
 if [[ "$ADWORK" == "id: brockma9: no such user" ]]; then
-	echo "This machine is not connected to AD"
-	exit 1
+
+    echo "This machine is not connected to AD"
+	
+    exit 1
 else
-	echo "Connected to AD and moving on. Nothing to see here, move along."
+	
+    echo "Connected to AD and moving on. Nothing to see here, move along."
+
 fi
 
 #####
@@ -68,16 +75,20 @@ fi
 
 mkdir $restore
 
-u=`ls $bkVolume/AutoDelete/ | grep -v ".DS_Store"`
+BackupList=`ls $bkVolume/AutoDelete/ | grep -v ".DS_Store"`
 
-dropdown=`$CD standard-dropdown --title "Choose a Backup" --string-output --no-newline --text "Please choose a baskup to restore" --items $u`
+dropdown=`$CD standard-dropdown --title "Choose a Backup" --string-output --no-newline --text "Please choose a baskup to restore" --items $BackupList`
 
 pickBK=`echo $dropdown | awk '{ print $2 }'`
+
+echo $pickBK
 
 #attach the backup
 hdiutil attach $bkVolume/AutoDelete/$pickBK -mountpoint $restore
 
-USERZ=`ls $restore/Users/ | grep -v ".localized" | grep -v "localadmin" | grep -v "Shared"`
+
+
+USERZ=`ls $restore/Users/ | grep -v ".localized" | grep -v "ladmin" | grep -v "Shared"`
 
 for U in $USERZ; do
 	#Making the new home folder for the AD user account
@@ -91,23 +102,17 @@ for U in $USERZ; do
 	else
 		
 		#copy the files to the new home folder 
-		FILEZ=`ls -a $restore/Users/$U/`
-		for F in $FILEZ; do
-			#Copy the files into the home dir
-			cp -Rfp $restore/Users/$U/$F /Users/$U/			
-		done
+		cp -Rfp $restore/Users/$U/* /Users/$U/
 		
 		#Set Permissions on the home folders
-		for P in `ls /Users/ | grep -v Shared | grep -v localadmin` ; do
-			#sets owner and group to user and staff
-			chown -R $P:staff /Users/$P
-			#sets the folder to let the staff users in but no access
-			chmod 740 /Users/$P
-			#sets the user to have full access to the home dir and no one else.
-			chmod -R 700 /Users/$P/*
-			#Access to the public folder
-			chmod 777 /Users/$P/Public
-		done 
+		#sets owner and group to user and staff
+		chown -R $U:staff /Users/$U
+		#sets the folder to let the staff users in but no access
+		chmod 740 /Users/$U
+		#sets the user to have full access to the home dir and no one else.
+		chmod -R 700 /Users/$U/*
+		#Access to the public folder
+		chmod 777 /Users/$U/Public 
 	fi		
 done	
 
@@ -124,4 +129,3 @@ touch $bkVolume/AutoDelete/$pickBK
 killall caffeinate
 
 exit 0
-
