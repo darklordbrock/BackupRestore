@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 
 ###
 #Script Designed by Ian Gunther and Kyle Brockman
@@ -65,7 +65,7 @@ fi
 hdiutil create $bkVolume/AutoDelete/$BACKUP.dmg -verbose -format UDBZ -nocrossdev -srcfolder /
 
 #scan the image for restore
-asr imagescan --source $bkVolume/$BACKUP --verbose
+#asr imagescan --source $bkVolume/$BACKUP --verbose
 
 #check the backup
 hdiutil verify $bkVolume/AutoDelete/$BACKUP.dmg
