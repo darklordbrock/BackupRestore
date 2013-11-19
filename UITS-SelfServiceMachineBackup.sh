@@ -102,7 +102,7 @@ if [[ $? == 0 ]]; then
 
 	It started at `echo $FULLTIME` and ended at `date "+%Y.%m.%d %H:%M:%S"`.
 
-	Total backup size is `ls -lah /tmp/MacBackups/AutoDelete/$BACKUP.dmg | awk '{ print $5 }'`.
+	Total backup size is `du -h /tmp/MacBackups/AutoDelete/$BACKUP.dmg | awk '{ print $1 }'`.
 
 	Thank you,
 	Backup Process.
