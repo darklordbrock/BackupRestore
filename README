@@ -1,109 +1,15 @@
 General Overview:
 
-You would run these scripts in this order in DeployStudio:
-1a. encryptioncheck - Make sure it is not encrypted before backing up.
-1b. DS_BACKUP_DATA_LION - back up computer
-1c. Image computer
-1d. copyRestoreFile
-2. firstbootBeforeJSS
-3. firstbootAfterJSS
+ 1) Backup the clients machine
+ 2) Verify the backup
+ 3) Image/reimage the machine
+ 4) FirstbootJSS script
+ 5) Restore clients data 
+ 
+The Details:
 
-copyRestoreFiles Script
-
-This script will set the path to the internal drive, set paths to the right User directory, and copy the backup to the local drive's shared folder.
-
--------------
-
-encryption check script
-
-This script is designed to work in DeployStudio. This script checks for an encrypted drive in 10.6, 10.7, and 10.8. The script has been tested for all three operating systems and works. It sets the script to look at the internal drive and declares what encryption is. Then after running to see if the drive is encrypted it will point to different workflows. One workflow will give an error message stating that the drive is encrypted and to unencrypt it first before backing up the drive. The if then statement first checks 10.7 and 10.8 and then if it passes (meaning the drive isn't encrypted) then it will check for 10.6 encryption.
-
--------------
-
-First boot before and after JSS scripts
-
-First boot before JSS script sets time server, time zone, grabs the Generated UID of everyone and adds everyone to the nested groups of lpadmin and App Store. Then it will create a local admin group and a local time machine group. The script finished up with disabling iCloud.
-
-First boot after JSS script adds a JSS account to the local admin group. It checks for JAMF binary and if it isn't there the script will exit. If it is there it will set the department in JSS based on what we name the machine. It will also check for any JAMF policies that need to be run and will install the manual printer installs. Next an if then statement will check to see if the computer is connect to active directory and will then make a new user home folder for the active directory user account. It will then untar the backup in the shared folder and move the files over to the new home folder. After it will set the correct permissions on the home folders so there won't be any issues for the user.
-
-------------
-
-BackupRestore Scripts
-Current Version - 0.7.1
-
-## Intro ##
-See post here: http://rustyisageek.blogspot.com/p/backuprestore-scripts.html
-
-## Please contact me if you would like to submit code. I still need to get alternate backup methods working. Rsync and ditto have been failing in my tests. ##
-
-## Known Issues ##
-
-1)
--e flag to exclude users has been know to not work properly. If used, you must specify all of the default options ( "shared" "guest" "deleted users" ), as well as your additions!
-
-2)
-Always test the script before using it in production! I currently don't have a setup where I can test changes, so always double check!!
-
-## Basic Usage ##
-
-
-Usage: DS_BACKUP_DATA [ -e "guest admin shared" ] [ -v "/Volumes/Macintosh HD" ] [ -u /Users ] [ -d "/Volumes/External Drive/" ] [ -t tar ]
-Variables can be set in DeployStudio variables window when running script.
-BackupRestore Variables:
--q Unique Identifier 
-		Should be left empty. Read Me has more
-		information on its use.
--c Remove User Cache. 
-		Will delete the Users /Library/Cache
- 		folder before backing up the data.
--e Users to Skip - Doesn't Work.
-        Must use quotes for multiple users
-        Default is "guest" and "shared"
-            You must specify "guest" and
-            "shared" if your use the argument
--v Target volume
-        Specify full path to mount point of volume
-        Default is the internal volume
-        e.g. /Volumes/Macintosh HD
--u User path on target
-        Set to path of users on volume
-        Default is /Users
--d Backup destination
-        Specify full path to the backup volume
-        Default is /tmp/DSNetworkRepository
--t Backup tool (tar) - Still working on this one!
-        Select backup software, Default tar
-        tar = Use tar with gzip to backup.
-        ditto and rsync NOT WORKING, yet!
-        -removed- ditto = Use ditto with gzip to backup
-        -removed- rsync = Use rsync to backup
-
-
-Usage: DS_RESTORE_DATA [ -e "guest admin shared" ] [ -v "/Volumes/Macintosh HD" ] [ -u /Users ] [ -d "/Volumes/External Drive/" ] [ -t tar ]
-Variables can be set in DeployStudio variables window when running script.
-BackupRestore Variables:
--q Unique Identifier.
-		Enter the MAC address of the backup you want to restore.
-		For example, if you backup a computer and its MAC address
-		was: 000000000001. You can then specify that MAC as the
-		variable to restore to a different computer.
--v Target volume
-		Specify full path to mount point of volume
-		Default is the \$DS_LAST_RESTORED_VOLUME volume
-		e.g. "/Volumes/Macintosh HD"
--u User path on target
-		Set to path of users on volume
-		Default is /Users
--r Backup Repository Path
-		Set to path of the backup volume
-		Default is the DS Repository
-		e.g. "/Volumes/NFSDrive/Backups"
-
-
-## Advanced Usage ##
-
-Unique Identifier Usage:
-
-If you'd like to backup from one computer and restore to another, you can specify the MAC address as the UNIQUE_ID (-q) when restoring. This tells the restore scripts to pull the backup from the old computer (by MAC address) rather than look for a backup from the same computer (same MAC address).
-
-Alternatively, you can specify a UNIQUE_ID (-q) for both backup and restore. This way, the scripts will ignore the MAC address of the machines and backup and restore the data using a folder named with the the specified variable. Be sure to set the target volume (-v) for the Backup and Restore so the scripts know where to pull the backup from and where to restore it to. Otherwise, the BackupRestore scripts will use the internal drive of that machine as the backup and restore destinations.
+	UITS-SelfServiceMachineBackup.sh - This script is to run on the clients machine. This will backup the machine while it is running. This will be run from Self Service in our JAMF environment. This will e-mail the techincal staff at the completion of the backup, this will let the staff know if it passes or fails. 
+	
+	UITS-RestoreFromSelfService.sh - This will Restore the clients data if it is the same machine the backup was taken from. 
+	
+	UITS-RestoreFromSelfServicePrompt.sh - This will list the backups on the server and allow a tech to restore one. This is going to be run from Self Service in our JAMF environment.
