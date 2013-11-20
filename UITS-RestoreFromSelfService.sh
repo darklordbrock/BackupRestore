@@ -4,7 +4,7 @@ export M="MacBackups"
 
 export bkVolume="/tmp/$M"
 
-export serial=`system_profiler | grep "Serial Number (system)" | awk '{print $4}'`
+export serial=`system_profiler SPHardwareDataType | awk '/Serial/ {print $4}'`
 
 export restore="/tmp/restore"
 
