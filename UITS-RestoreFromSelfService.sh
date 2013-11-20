@@ -83,23 +83,17 @@ for U in $USERZ; do
 	else
 		
 		#copy the files to the new home folder 
-		FILEZ=`ls -a $restore/Users/$U/`
-		for F in $FILEZ; do
-			#Copy the files into the home dir
-			cp -Rfp $restore/Users/$U/$F /Users/$U/			
-		done
+		cp -Rfp $restore/Users/$U/* /Users/$U/
 		
 		#Set Permissions on the home folders
-		for P in `ls /Users/ | grep -v Shared | grep -v localadmin` ; do
-			#sets owner and group to user and staff
-			chown -R $P:staff /Users/$P
-			#sets the folder to let the staff users in but no access
-			chmod 740 /Users/$P
-			#sets the user to have full access to the home dir and no one else.
-			chmod -R 700 /Users/$P/*
-			#Access to the public folder
-			chmod 777 /Users/$P/Public
-		done 
+		#sets owner and group to user and staff
+		chown -R $U:staff /Users/$U
+		#sets the folder to let the staff users in but no access
+		chmod 740 /Users/$U
+		#sets the user to have full access to the home dir and no one else.
+		chmod -R 700 /Users/$U/*
+		#Access to the public folder
+		chmod 777 /Users/$U/Public 
 	fi		
 done	
 
