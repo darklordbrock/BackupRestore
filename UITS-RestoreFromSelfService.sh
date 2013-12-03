@@ -67,7 +67,7 @@ fi
 mkdir $restore
 
 #attach the backup
-hdiutil attach $bkVolume/AutoDelete/$serial* -mountpoint $restore
+hdiutil attach $bkVolume/AutoDelete/*$serial* -mountpoint $restore
 
 USERZ=`ls $restore/Users/ | grep -v ".localized" | grep -v "localadmin" | grep -v "Shared"`
 
