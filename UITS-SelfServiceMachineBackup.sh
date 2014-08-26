@@ -10,6 +10,21 @@ if [ "$(whoami)" != "root" ]; then
 	exit 1
 fi
 
+IS_LAPTOP=`/usr/sbin/system_profiler SPHardwareDataType | grep "Model Identifier" | grep "Book"`
+
+if [ "$IS_LAPTOP" != "" ]; then
+  AC_POWER=`ioreg -l | grep ExternalConnected | cut -d"=" -f2 | sed -e 's/ //g'`
+  if [[ "$AC_POWER" == "No" ]]; then
+    echo "Computer needs to be connected to power"
+    /Applications/Utilities/CocoaDialog.app/Contents/MacOS/CocoaDialog ok-msgbox --text "Computer needs to be connected to power" --informative-text "The Laptop will need to be plugged into power while the machine is backed up." --no-newline --float
+    exit 1
+  else
+    echo "Computer is connected to power"
+  fi
+else
+  echo "Not a laptop"
+fi
+
 export TIME=`date "+%Y.%m.%d"`
 
 export FULLTIME=`date "+%Y.%m.%d %H:%M:%S"`
@@ -27,12 +42,8 @@ osvers=$(sw_vers -productVersion | awk -F. '{print $2}')
 sw_vers=$(sw_vers -productVersion)
 
 if [[ ${osvers} -ge 9 ]]; then
-	if [[ ${sw_vers} = "10.9" ]]; then
-		echo "[default]" >> /etc/nsmb.conf ; echo "smb_neg=smb1_only" >> /etc/nsmb.conf
-	elif [[ ${sw_vers} = "10.9.1" ]]; then
-		echo "test 10.9.1"
-		exit 1
-	fi
+	echo "[default]" >> /etc/nsmb.conf ; echo "smb_neg=smb1_only" >> /etc/nsmb.conf
+	echo "[default]" >> ~/Library/Preferences/nsmb.conf ; echo "smb_neg=smb1_only" >> ~/Library/Preferences/nsmb.conf
 else
 	echo "not os 10.9"
 fi
@@ -58,7 +69,7 @@ if [[ ! -d "$bkVolume" ]]; then
 	mkdir $bkVolume
 fi
 
-#Umount anything that might be mounted to the backup point 
+#Umount anything that might be mounted to the backup point
 umount $bkVolume
 
 sleep 10
@@ -92,8 +103,8 @@ hdiutil verify $bkVolume/AutoDelete/$BACKUP.dmg
 
 if [[ $? == 0 ]]; then
 	echo "Backup is good"
-	
-	#Email Techs the backup is completed 
+
+	#Email Techs the backup is completed
 	mail -s "Backup Complete for `hostname` at `date "+%Y.%m.%d %H:%M:%S"`" ds-techs@uwm.edu ds-fte@uwm.edu <<EOF
 
 	Hello,
@@ -108,9 +119,9 @@ if [[ $? == 0 ]]; then
 	Backup Process.
 
 EOF
-	
+
 else
-	
+
 	mail -s "Backup Failed for `hostname` at `date "+%Y.%m.%d %H:%M:%S"`" ds-techs@uwm.edu ds-fte@uwm.edu <<EOF
 
 	Hello,
